@@ -2,7 +2,7 @@
 #  * Copyright (C), 2023-2024, Sara Echeverria (bl33h)
 #  * @uthor Sara Echeverria
 #  * FileName: PCsSystem
-#  * @version: I
+#  * @version: II
 #  * Creation: 24/04/2023
 #  * Last modification: 25/04/2023
 #  */
@@ -26,14 +26,14 @@ class PCsSystem(Frame):
         etiTitle = ct.CTkLabel(self.win, text="Welcome to PCs System!", font=("Arial", 20, "bold"))
         findPCbutton = ct.CTkButton(self.win, text="Search PC", command= lambda: FindPC(self.win), width=200)
         deletePCbutton = ct.CTkButton(self.win, text="Delete PC", command= lambda: DeletePC(self.win), width=200)
-        #adjustPriceButton = ct.CTkButton(self.win, text="Editar Usuario", command= lambda: EditarInfoUsuario(self.win), width=200)
-        #checkPCbutton = ct.CTkButton(self.win, text="Encargado Bodega", command= lambda: Bodega(self.win), width=200)
+        adjustPriceButton = ct.CTkButton(self.win, text="Adjust PC price", command= lambda: AdjustPrice(self.win), width=200)
+        #checkPCbutton = ct.CTkButton(self.win, text="Check PC", command= lambda: CheckPCbutton(self.win), width=200)
         
         
         etiTitle.pack(pady=5)
         findPCbutton.pack(pady=5)
         deletePCbutton.pack(pady=5)
-        #adjustPriceButton.pack(pady=5)
+        adjustPriceButton.pack(pady=5)
         #checkPCbutton.pack(pady=5)
         
         self.win.geometry("500x500")
@@ -45,11 +45,7 @@ class PCsSystem(Frame):
             user="postgres",
             password="passworD"
         )
-    def find_pc(self):
-        FindPC(self.conn)
-    def delete_pc(self):
-        DeletePC(self)
-
+    
 class FindPC:
     def __init__(self, parent):
         self.parent = parent
@@ -150,6 +146,58 @@ class DeletePC:
                 message = "There is no model with the given number."
             else:
                 message = f"The PC with the model {modelo} has been eliminated."
+            self.conn.commit()
+            messagebox.showinfo("Results", message)
+        except Exception as e:
+            self.conn.rollback()
+            messagebox.showerror("Error", f"Error deleting PC: {str(e)}")
+        finally:
+            cursor.close()
+
+class AdjustPrice:
+    def __init__(self, parent):
+        self.parent = parent
+        self.win = CTkToplevel()
+        self.win.title("Adjust PC price")
+
+        etiTitle = CTkLabel(self.win, text="Adjust PC price ($100 discount)", font=("Arial", 20, "bold"))
+        modelo_lab = CTkLabel(self.win, text="Model Number")
+        self.modelo_input = CTkEntry(self.win, width=200)
+
+        etiTitle = CTkLabel(self.win, text="Adjust PC price", font=("Arial", 20, "bold"))
+        modelo_lab = CTkLabel(self.win, text="Model Number")
+        self.modelo_input = CTkEntry(self.win, width=200)
+        button_delete = CTkButton(self.win, text="Adjust PC price", command=self.adjust_price, width=100)
+        button_close = CTkButton(self.win, text="Close", command=self.close, width=100)
+
+        etiTitle.pack(pady=5)
+        modelo_lab.pack()
+        self.modelo_input.pack(pady=5)
+        button_delete.pack(pady=5)
+        button_close.pack(pady=5)
+        self.win.geometry("600x200")
+
+        # Database connection
+        self.conn = psycopg2.connect(
+            host="localhost",
+            database="lab11",
+            user="postgres",
+            password="passworD"
+        )
+
+    def close(self):
+        self.conn.close()
+        self.win.destroy()
+
+    def adjust_price(self):
+        modelo = self.modelo_input.get()
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(f"UPDATE PC SET precio = precio - 100 WHERE modelo = '{modelo}'")
+            if cursor.rowcount == 0:
+                message = "There is no model with the given number."
+            else:
+                message = f"The price of PC with the model {modelo} has been adjusted."
             self.conn.commit()
             messagebox.showinfo("Results", message)
         except Exception as e:
