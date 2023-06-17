@@ -5,7 +5,7 @@ A user-friendly application designed for efficient management of personal comput
 
 <p align="center">
   <br>
-  <img src="https://i.imgur.com/y2V8fIb.png" alt="pic" width="400">
+  <img src="https://i.imgur.com/2cL4N6T.png" alt="pic" width="400">
   <br>
 </p>
 <p align="center" >
