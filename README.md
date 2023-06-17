@@ -1,7 +1,7 @@
 # PCsSystem
 
 # medicalSystem
-MedicalSystem is a Python-based application that models a medical system and utilizes a PostgreSQL database for storing data related to doctors, healthcare facilities, medical supplies, diseases, and patients. The system is designed to provide a comprehensive and robust solution for managing medical information.
+A user-friendly application designed for efficient management of personal computers within a system. It offers a range of functionalities, including searching for computers based on specific criteria, deleting entries, adjusting prices, and verifying devices existence using attributes. Powered by a PostgreSQL database, this project enables seamless storage, retrieval, and manipulation of computer-related data. With its intuitive design and comprehensive features, it provides an effective and streamlined solution for computer management.
 
 <p align="center">
   <br>
